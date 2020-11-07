@@ -7,33 +7,89 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <canvas id="canvas" width="" height="">hi</canvas>
+    <div>
+      <button id="color">Color</button>
+      <button id="width">Width</button>
+      <button id="clear">Clear</button>
+    </div>
+    <canvas id="canvas"></canvas>
     <script>
       // 设置 canvas 宽高为视窗宽高
       let canvas = document.getElementById('canvas')
       canvas.width = document.documentElement.clientWidth
-      canvas.height = document.documentElement.clientHeight
+      canvas.height = document.documentElement.clientHeight - 25
 
-      // 画线
+      // 初始化
       let ctx = canvas.getContext('2d')
       let draw = false
+      let last = []
 
       ctx.fillStyle = 'rgba(200,0,0,0.5)'
+      ctx.strokeStyle = 'rgba(200,10,0,1)'
+      ctx.lineWidth = 8
+      ctx.lineCap = 'round'
+      color.style.color = ctx.strokeStyle
+      width.innerHTML = 'Width:' + ctx.lineWidth
 
-      canvas.onmousedown = (e) => {
-        draw = true
-      }
-      canvas.onmouseup = (e) => {
-        draw = false
-      }
+      // 检测设备是否支持触屏
+      let isTouchDevice = 'ontouchstart' in document.documentElement
 
-      canvas.onmousemove = (e) => {
-        if (draw === true) {
-          // ctx.fillRect(e.x - 5, e.y - 5, 10, 10)
-          ctx.beginPath()
-          ctx.arc(e.x, e.y, 5, 0, 2 * Math.PI)
-          ctx.fill()
+      if (isTouchDevice) {
+        canvas.ontouchstart = (e) => {
+          last = [e.touches[0].clientX, e.touches[0].clientY]
         }
+        canvas.ontouchmove = (e) => {
+          // ctx.beginPath()
+          // ctx.arc(e.touches[0].clientX, e.touches[0].clientY, 5, 0, 2 * Math.PI)
+          // ctx.fill()
+          drawLine(last[0], last[1], e.touches[0].clientX, e.touches[0].clientY)
+          last = [e.touches[0].clientX, e.touches[0].clientY]
+        }
+      } else {
+        canvas.onmousedown = (e) => {
+          draw = true
+          last = [e.x, e.y]
+        }
+        canvas.onmouseup = (e) => {
+          draw = false
+        }
+        canvas.onmousemove = (e) => {
+          if (draw === true) {
+            // 画矩形
+            // ctx.fillRect(e.x - 5, e.y - 5, 10, 10)
+            /* 画圆
+            ctx.beginPath()
+            ctx.arc(e.x, e.y, 5, 0, 2 * Math.PI)
+            ctx.fill() */
+            drawLine(last[0], last[1], e.x, e.y) // 画线
+            last = [e.x, e.y]
+          }
+        }
+      }
+      function drawLine(x1, y1, x2, y2) {
+        ctx.beginPath()
+        ctx.moveTo(x1, y1)
+        ctx.lineTo(x2, y2)
+        ctx.stroke()
+      }
+      // color 按钮，随机颜色
+      color.onclick = (e) => {
+        let r = Math.floor(Math.random() * 255)
+        let g = Math.floor(Math.random() * 255)
+        let b = Math.floor(Math.random() * 255)
+        ctx.strokeStyle = `rgb(${r},${g},${b})`
+        color.style.color = ctx.strokeStyle
+      }
+
+      // width 按钮，随机宽度
+      width.onclick = (e) => {
+        ctx.lineWidth = Math.floor(Math.random() * 20) + 1
+        width.innerHTML = 'Width:' + ctx.lineWidth
+      }
+
+      // clear 按钮，清除画布
+      clear.onclick = (e) => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
       }
 
       /* JS 操作 DOM 方法，但效率很差
@@ -51,7 +107,7 @@
         div.style.marginTop = '-3px'
         div.style.borderRadius = '50%'
         div.style.background = 'black'
-        canvas.appendChild(div) 
+        canvas.appendChild(div)
       }*/
     </script>
   </body>
