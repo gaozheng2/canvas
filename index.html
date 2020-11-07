@@ -7,9 +7,37 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <div id="canvas">hi</div>
+    <canvas id="canvas" width="" height="">hi</canvas>
     <script>
-      canvas.onclick = (e) => {
+      // 设置 canvas 宽高为视窗宽高
+      let canvas = document.getElementById('canvas')
+      canvas.width = document.documentElement.clientWidth
+      canvas.height = document.documentElement.clientHeight
+
+      // 画线
+      let ctx = canvas.getContext('2d')
+      let draw = false
+
+      ctx.fillStyle = 'rgba(200,0,0,0.5)'
+
+      canvas.onmousedown = (e) => {
+        draw = true
+      }
+      canvas.onmouseup = (e) => {
+        draw = false
+      }
+
+      canvas.onmousemove = (e) => {
+        if (draw === true) {
+          // ctx.fillRect(e.x - 5, e.y - 5, 10, 10)
+          ctx.beginPath()
+          ctx.arc(e.x, e.y, 5, 0, 2 * Math.PI)
+          ctx.fill()
+        }
+      }
+
+      /* JS 操作 DOM 方法，但效率很差
+      canvas.onmousemove = (e) => {
         // console.log 调试大法
         console.log(`X:${e.x}`)
         console.log('Y:' + e.y)
@@ -23,8 +51,8 @@
         div.style.marginTop = '-3px'
         div.style.borderRadius = '50%'
         div.style.background = 'black'
-        canvas.appendChild(div)
-      }
+        canvas.appendChild(div) 
+      }*/
     </script>
   </body>
 </html>
