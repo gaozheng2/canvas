@@ -28,11 +28,11 @@ var server = http.createServer(function (request, response) {
     let file = fs.createReadStream('./index.html')
     response.setHeader('Content-Type', 'text/html;charset=utf-8')
     file.pipe(response) // 返回文件
-  } else if (path === '/x') {
+  } else if (path === '/style.css') {
     response.statusCode = 200
+    let file = fs.createReadStream('./style.css')
     response.setHeader('Content-Type', 'text/css;charset=utf-8')
-    response.write(`body{color: red;}`)
-    response.end()
+    file.pipe(response)
   } else if (path === '/y') {
     response.statusCode = 200
     response.setHeader('Content-Type', 'text/javascript;charset=utf-8')
