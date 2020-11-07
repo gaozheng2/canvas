@@ -3,7 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>画板</title>
+    <title>canvas</title>
+    <link rel="stylesheet" href="./style.css" />
   </head>
-  <body></body>
+  <body>
+    <div id="canvas">hi</div>
+    <script>
+      canvas.onclick = (e) => {
+        // console.log 调试大法
+        console.log(`X:${e.x}`)
+        console.log('Y:' + e.y)
+        let div = document.createElement('div')
+        div.style.position = 'absolute'
+        div.style.left = e.x + 'px'
+        div.style.top = `${e.y}px`
+        div.style.width = '6px'
+        div.style.height = '6px'
+        div.style.marginLeft = '-3px'
+        div.style.marginTop = '-3px'
+        div.style.borderRadius = '50%'
+        div.style.background = 'black'
+        canvas.appendChild(div)
+      }
+    </script>
+  </body>
 </html>
